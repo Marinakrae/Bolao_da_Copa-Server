@@ -2,7 +2,7 @@ import Fastify from 'fastify'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient({
-    log: ['query'],
+    log: ['query']
 })
 
 async function bootstrap() {
@@ -11,10 +11,10 @@ async function bootstrap() {
     })
 
     fastify.get('/pools/count', async () => {
-        const pools = await prisma.pools.findMany({
+        const pools = await prisma.pool.findMany({
             where: {
                 code: {
-                    startsWith: 'D'
+                    startsWith: 'M'
                 }
             }
         })
