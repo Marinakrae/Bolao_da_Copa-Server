@@ -1,10 +1,10 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
-import { poolRoutes } from './routes/pool'
-import { guessRoutes } from './routes/guess'
-import { authRoutes } from './routes/auth'
-import { gameRoutes } from './routes/game'
-import { userRoutes } from './routes/user'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient({
+    log: ['query']
+})
 
 async function bootstrap() {
     const fastify = Fastify({
@@ -15,13 +15,12 @@ async function bootstrap() {
         origin: true, //colocaria aqui o dominio com permissao de acesso
     })
 
-    await fastify.register(poolRoutes)
-    await fastify.register(authRoutes)
-    await fastify.register(gameRoutes)
-    await fastify.register(guessRoutes)
-    await fastify.register(userRoutes)
+    fastify.get('/pools/count', async () => {
+        const count = await prisma.pool.count()
+        return { count }
+    })
 
-    await fastify.listen({ port: 3333, /*host: '0.0.0.0'*/ })
+    await fastify.listen({ port: 3333, host: '0.0.0.0' })
 }
 
 bootstrap()
